@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'validators.dart';
 import 'auth_errors.dart';
+import 'register_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -45,8 +46,9 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
     try {
-      await FirebaseAuth.instance
-          .sendPasswordResetEmail(email: _emailCtrl.text.trim());
+      await FirebaseAuth.instance.sendPasswordResetEmail(
+        email: _emailCtrl.text.trim(),
+      );
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Revisa tu correo para restablecer.')),
@@ -70,7 +72,8 @@ class _LoginPageState extends State<LoginPage> {
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 420),
-          child: SingleChildScrollView( // 👈 para evitar overflow con teclado
+          child: SingleChildScrollView(
+            // 👈 para evitar overflow con teclado
             padding: const EdgeInsets.all(16),
             child: Form(
               key: _formKey,
@@ -120,6 +123,18 @@ class _LoginPageState extends State<LoginPage> {
                   TextButton(
                     onPressed: _loading ? null : _resetPassword,
                     child: const Text('¿Olvidaste tu contraseña?'),
+                  ),
+                  TextButton(
+                    onPressed: _loading
+                        ? null
+                        : () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const RegisterPage(),
+                              ),
+                            );
+                          },
+                    child: const Text('¿No tienes cuenta? Regístrate'),
                   ),
                   const SizedBox(height: 8),
                   const _SmallPrint(),
